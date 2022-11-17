@@ -1,4 +1,4 @@
-package com.composetv.ui
+package com.composetv.ui.weight
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.composetv.R
 import com.composetv.model.MenuItem
+import com.composetv.ui.padding
 import com.composetv.ui.theme.black
 import com.composetv.ui.theme.gray
 import com.composetv.ui.theme.lightGray
@@ -42,8 +43,6 @@ import com.composetv.ui.theme.profileDetailsTextStyle
 import com.composetv.ui.theme.profileNameTextStyle
 import com.composetv.ui.theme.white
 import com.composetv.ui.theme.yellow
-import com.composetv.ui.weight.HorizontalSpacer
-import com.composetv.ui.weight.VerticalSpacer
 
 @Composable
 fun MenuBar() {

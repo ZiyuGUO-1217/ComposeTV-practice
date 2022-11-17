@@ -1,4 +1,4 @@
-package com.composetv.ui
+package com.composetv.ui.burgers
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -26,6 +26,8 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.composetv.R
+import com.composetv.model.Burger
+import com.composetv.ui.padding
 import com.composetv.ui.theme.black
 import com.composetv.ui.theme.gray
 import com.composetv.ui.theme.mainContentTextStyle
@@ -35,7 +37,7 @@ import com.composetv.ui.theme.white
 import com.composetv.ui.theme.yellow
 
 @Composable
-fun ItemCard(imageUrl: String, name: String, weight: String, price: String) {
+fun BurgerCard(burger: Burger) {
     Card(
         modifier = Modifier
             .padding(top = R.dimen.content_item_top_padding, bottom = R.dimen.content_item_bottom_padding)
@@ -52,7 +54,7 @@ fun ItemCard(imageUrl: String, name: String, weight: String, price: String) {
 
         val image = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
+                .data(burger.imageUrl)
                 .crossfade(true)
                 .build(),
             contentScale = ContentScale.Fit,
@@ -67,9 +69,9 @@ fun ItemCard(imageUrl: String, name: String, weight: String, price: String) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ItemImage(image, isImageLoading)
-                NameText(name)
-                WeightText(weight)
-                PriceText(price)
+                NameText(burger.name)
+                WeightText(burger.weight)
+                PriceText(burger.price)
             }
         }
     }

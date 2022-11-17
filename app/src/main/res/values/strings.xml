@@ -12,6 +12,6 @@
     <string name="profile_button">Open profile</string>
     <string name="top_bar_title"><![CDATA[Food & Drinks  >   Burgers]]></string>
     <string name="search_bar_placeholder">Search</string>
-    <string name="content_title">Burgers</string>
+    <string name="content_title_burger">Burgers</string>
 
 </resources>

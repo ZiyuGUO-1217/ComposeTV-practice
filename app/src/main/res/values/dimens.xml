@@ -34,9 +34,11 @@
     <dimen name="profile_button_horizontal_padding">10dp</dimen>
 
     // Detail Page
-    <dimen name="detail_page_padding">36dp</dimen>
+    <dimen name="detail_page_horizontal_padding">36dp</dimen>
+    <dimen name="detail_page_top_padding">68dp</dimen>
 
     // TopBar
+    <dimen name="top_bar_top_padding">36dp</dimen>
     <dimen name="topbar_icon_size">32dp</dimen>
     <dimen name="topbar_height">32dp</dimen>
     <dimen name="topbar_title_start_padding">16dp</dimen>
