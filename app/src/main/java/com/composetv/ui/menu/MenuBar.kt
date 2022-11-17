@@ -1,4 +1,4 @@
-package com.composetv.ui.weight
+package com.composetv.ui.menu
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -22,14 +22,22 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.composetv.R
 import com.composetv.model.MenuItem
 import com.composetv.ui.padding
@@ -43,33 +51,80 @@ import com.composetv.ui.theme.profileDetailsTextStyle
 import com.composetv.ui.theme.profileNameTextStyle
 import com.composetv.ui.theme.white
 import com.composetv.ui.theme.yellow
+import com.composetv.ui.weight.HorizontalSpacer
+import com.composetv.ui.weight.TvLeanBackButton
+import com.composetv.ui.weight.VerticalSpacer
+import com.composetv.ui.weight.isActionUp
+import com.composetv.ui.weight.isCenter
+import com.composetv.ui.weight.isDown
+import com.composetv.ui.weight.isLeft
+import com.composetv.ui.weight.isRight
+import com.composetv.ui.weight.isUp
+
+private val LocalMenuActor = compositionLocalOf<(MenuUiAction) -> Unit> {
+    error("Actor not provided yet!")
+}
 
 @Composable
 fun MenuBar() {
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .width(dimensionResource(id = R.dimen.menu_bar_width))
-            .shadow(dimensionResource(id = R.dimen.page_divider_width))
-    ) {
-        LogoBar()
-        MenuItems()
-        Spacer(modifier = Modifier.weight(1f))
-        ProfileCard()
+    val viewModel: MenuViewModel = hiltViewModel()
+    val state by viewModel.uiState.collectAsState()
+    val initFocusState by remember { mutableStateOf(true) }
+    CompositionLocalProvider(LocalMenuActor provides viewModel::dispatch) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(dimensionResource(id = R.dimen.menu_bar_width))
+                .shadow(dimensionResource(id = R.dimen.page_divider_width))
+        ) {
+            LogoBar()
+            MenuItems(initFocusState, state.selectedItem)
+            Spacer(modifier = Modifier.weight(1f))
+            ProfileCard()
+        }
     }
 }
 
 @Composable
-private fun MenuItems() {
-    MenuItem.values().forEachIndexed { index, menuItem ->
-        MenuItem(
-            iconId = menuItem.iconId,
-            text = stringResource(id = menuItem.textId),
-            isSelected = index == 1
-        )
-        if (index != MenuItem.values().lastIndex) {
-            VerticalSpacer(height = R.dimen.menu_item_spacing)
+private fun MenuItems(initFocusState: Boolean, selectedItem: Int) {
+    val actor = LocalMenuActor.current
+    TvLeanBackButton(
+        shouldFocus = initFocusState,
+        onKeyEvent = { handleKeyEvent(it, actor) }
+    ) {
+        Column {
+            MenuItem.values().forEachIndexed { index, menuItem ->
+                MenuItem(
+                    iconId = menuItem.iconId,
+                    text = stringResource(id = menuItem.textId),
+                    isSelected = index == selectedItem
+                )
+                if (index != MenuItem.values().lastIndex) {
+                    VerticalSpacer(height = R.dimen.menu_item_spacing)
+                }
+            }
         }
+    }
+}
+
+private fun handleKeyEvent(keyEvent: KeyEvent, actor: (MenuUiAction) -> Unit): Boolean {
+    return when {
+        keyEvent.isActionUp() -> true
+        keyEvent.isLeft() -> true
+        keyEvent.isRight() -> true
+        keyEvent.isUp() -> {
+            actor(MenuUiAction.KeyUp)
+            true
+        }
+        keyEvent.isDown() -> {
+            actor(MenuUiAction.KeyDown)
+            true
+        }
+        keyEvent.isCenter() -> {
+            actor(MenuUiAction.KeySelected)
+            true
+        }
+        else -> false
     }
 }
 

@@ -20,7 +20,7 @@ abstract class StateViewModel<UiState, UiAction, UiEvent> : ViewModel() {
         _uiState.asStateFlow()
     }
 
-    private var state
+    protected var state
         get() = _uiState.value
         private set(value) {
             _uiState.value = value
