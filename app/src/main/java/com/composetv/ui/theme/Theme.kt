@@ -1,13 +1,14 @@
-package com.composetv.ui
+package com.composetv.ui.theme
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 
 @Composable
 fun MyTheme(
     content: @Composable () -> Unit
 ) {
-    MaterialTheme {
+//    MaterialTheme(
+//        colors = darkColors
+//    ) {
         content()
-    }
+//    }
 }

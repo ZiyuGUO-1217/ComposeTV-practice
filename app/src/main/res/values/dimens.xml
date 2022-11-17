@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="page_divider_width">1dp</dimen>
+    <dimen name="card_shadow">4dp</dimen>
+    <dimen name="icon_size">16dp</dimen>
+    <dimen name="item_corner_radius_medium">8dp</dimen>
+
+    // menu bar
+    <dimen name="menu_bar_width">174dp</dimen>
+
+    // logo bar
+    <dimen name="logo_bar_top_padding">42dp</dimen>
+    <dimen name="logo_bar_bottom_padding">21dp</dimen>
+    <dimen name="logo_bar_horizontal_padding">24dp</dimen>
+    <dimen name="logo_size">28dp</dimen>
+    <dimen name="logo_and_title_spacing">10dp</dimen>
+
+    // menu item
+    <dimen name="menu_item_start_padding">12dp</dimen>
+    <dimen name="menu_item_end_padding">22dp</dimen>
+    <dimen name="menu_item_icon_padding">8dp</dimen>
+    <dimen name="menu_item_spacing">8dp</dimen>
+
+    // profile
+    <dimen name="profile_card_corner_radius">16dp</dimen>
+    <dimen name="profile_card_horizontal_padding">23dp</dimen>
+    <dimen name="profile_card_bottom_padding">50dp</dimen>
+    <dimen name="profile_card_height">98dp</dimen>
+    <dimen name="profile_image_size">32dp</dimen>
+    <dimen name="profile_image_offset">16dp</dimen>
+    <dimen name="profile_name_top_padding">26dp</dimen>
+    <dimen name="profile_details_top_padding">6dp</dimen>
+    <dimen name="profile_button_vertical_padding">12dp</dimen>
+    <dimen name="profile_button_horizontal_padding">10dp</dimen>
+
+    // Detail Page
+    <dimen name="detail_page_padding">36dp</dimen>
+
+    // TopBar
+    <dimen name="topbar_icon_size">32dp</dimen>
+    <dimen name="topbar_height">32dp</dimen>
+    <dimen name="topbar_title_start_padding">16dp</dimen>
+
+    // Search Bar
+    <dimen name="search_bar_width">182dp</dimen>
+    <dimen name="search_bar_icon_size">12dp</dimen>
+
+    // Contents
+    <dimen name="content_title_vertical_padding">28dp</dimen>
+    <dimen name="content_item_width">162dp</dimen>
+    <dimen name="content_item_height">204dp</dimen>
+    <dimen name="content_item_horizontal_spacing">22dp</dimen>
+    <dimen name="content_item_top_padding">2dp</dimen>
+    <dimen name="content_item_bottom_padding">20dp</dimen>
+    <dimen name="content_item_corner_radius">24dp</dimen>
+    <dimen name="content_item_image_height">88dp</dimen>
+    <dimen name="content_item_description_top_padding">4dp</dimen>
+    <dimen name="content_item_price_top_padding">10dp</dimen>
+
+
+</resources>

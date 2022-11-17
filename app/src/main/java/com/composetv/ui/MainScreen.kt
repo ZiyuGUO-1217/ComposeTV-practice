@@ -1,19 +1,28 @@
 package com.composetv.ui
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
+import com.composetv.ui.theme.white
 
 @Composable
 fun MainScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = "Welcome to ComposeTV!",
-            modifier = Modifier.align(Alignment.Center)
-        )
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(white)
+    ) {
+        MenuBar()
+        ContentPage()
     }
+}
+
+@Preview(device = Devices.AUTOMOTIVE_1024p, showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    MainScreen()
 }
