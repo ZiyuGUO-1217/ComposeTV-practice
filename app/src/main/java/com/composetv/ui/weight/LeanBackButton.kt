@@ -19,8 +19,8 @@ import androidx.compose.ui.semantics.Role
 
 @Composable
 fun TvLeanBackButton(
-    shouldFocus: Boolean,
-    onItemSelected: () -> Unit,
+    shouldFocus: Boolean = false,
+    onItemSelected: () -> Unit = {},
     isEnable: Boolean = true,
     content: @Composable BoxScope.(isFocused: Boolean) -> Unit
 ) {

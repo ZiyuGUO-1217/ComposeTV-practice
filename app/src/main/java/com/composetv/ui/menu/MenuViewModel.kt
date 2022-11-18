@@ -28,8 +28,11 @@ class MenuViewModel @Inject constructor(): StateViewModel<MenuUiState, MenuUiAct
 
     private fun onKeyDown() {
         val preSelected = state.selectedItem
-        if (preSelected == MenuItem.values().lastIndex) return
-        updateState { copy(selectedItem = preSelected + 1) }
+        if (preSelected == MenuItem.values().lastIndex) {
+            sendEvent(MenuUiEvent.FocusBelowItem)
+        } else {
+            updateState { copy(selectedItem = preSelected + 1) }
+        }
     }
 
     private fun onKeySelected() {

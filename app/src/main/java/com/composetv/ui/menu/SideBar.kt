@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,13 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
@@ -60,16 +59,21 @@ import com.composetv.ui.weight.isDown
 import com.composetv.ui.weight.isLeft
 import com.composetv.ui.weight.isRight
 import com.composetv.ui.weight.isUp
+import kotlinx.coroutines.flow.collectLatest
 
 private val LocalMenuActor = compositionLocalOf<(MenuUiAction) -> Unit> {
     error("Actor not provided yet!")
 }
 
 @Composable
-fun MenuBar() {
+fun SideBar() {
     val viewModel: MenuViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsState()
-    val initFocusState by remember { mutableStateOf(true) }
+    val menuFocusState = remember { mutableStateOf(true) }
+    val profileFocusState = remember { mutableStateOf(false) }
+
+    UiEffects(viewModel, profileFocusState)
+
     CompositionLocalProvider(LocalMenuActor provides viewModel::dispatch) {
         Column(
             modifier = Modifier
@@ -78,26 +82,40 @@ fun MenuBar() {
                 .shadow(dimensionResource(id = R.dimen.page_divider_width))
         ) {
             LogoBar()
-            MenuItems(initFocusState, state.selectedItem)
+            Menus(menuFocusState, state.selectedItem)
             Spacer(modifier = Modifier.weight(1f))
-            ProfileCard()
+            ProfileCard(profileFocusState)
         }
     }
 }
 
 @Composable
-private fun MenuItems(initFocusState: Boolean, selectedItem: Int) {
+fun UiEffects(viewModel: MenuViewModel, profileFocusState: MutableState<Boolean>) {
+    LaunchedEffect(Unit) {
+        viewModel.events.collectLatest { event ->
+            when (event) {
+                MenuUiEvent.FocusBelowItem -> profileFocusState.value = true
+            }
+        }
+    }
+}
+
+@Composable
+private fun Menus(focusState: MutableState<Boolean>, selectedItem: Int) {
     val actor = LocalMenuActor.current
     TvLeanBackButton(
-        shouldFocus = initFocusState,
+        shouldFocus = focusState.value,
         onKeyEvent = { handleKeyEvent(it, actor) }
-    ) {
+    ) { isFocused ->
+        focusState.value = isFocused
+
         Column {
             MenuItem.values().forEachIndexed { index, menuItem ->
                 MenuItem(
                     iconId = menuItem.iconId,
                     text = stringResource(id = menuItem.textId),
-                    isSelected = index == selectedItem
+                    isSelected = index == selectedItem,
+                    isMenuFocused = isFocused
                 )
                 if (index != MenuItem.values().lastIndex) {
                     VerticalSpacer(height = R.dimen.menu_item_spacing)
@@ -111,7 +129,7 @@ private fun handleKeyEvent(keyEvent: KeyEvent, actor: (MenuUiAction) -> Unit): B
     return when {
         keyEvent.isActionUp() -> true
         keyEvent.isLeft() -> true
-        keyEvent.isRight() -> true
+        keyEvent.isRight() -> false
         keyEvent.isUp() -> {
             actor(MenuUiAction.KeyUp)
             true
@@ -159,9 +177,15 @@ private fun LogoBar() {
 private fun MenuItem(
     @DrawableRes iconId: Int,
     text: String,
-    isSelected: Boolean = false
+    isSelected: Boolean,
+    isMenuFocused: Boolean
 ) {
-    val backgroundColor = if (isSelected) yellow else Color.Transparent
+    val backgroundColor = when {
+        isSelected && isMenuFocused -> yellow
+        isSelected -> lightGray
+        else -> Color.Transparent
+    }
+
     Row(
         modifier = Modifier
             .padding(start = R.dimen.menu_item_start_padding, end = R.dimen.menu_item_end_padding)
@@ -188,7 +212,7 @@ private fun MenuItem(
 }
 
 @Composable
-fun ProfileCard() {
+fun ProfileCard(profileFocusState: MutableState<Boolean>) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Card(
             modifier = Modifier
@@ -199,8 +223,8 @@ fun ProfileCard() {
             shape = RoundedCornerShape(dimensionResource(id = R.dimen.profile_card_corner_radius)),
             backgroundColor = white,
             elevation = dimensionResource(id = R.dimen.card_shadow),
-            content = { ProfileDetails() }
-        ) 
+            content = { ProfileDetails(profileFocusState) }
+        )
         Image(
             painter = painterResource(id = R.drawable.profile),
             contentDescription = "profile",
@@ -213,7 +237,7 @@ fun ProfileCard() {
 }
 
 @Composable
-private fun ProfileDetails() {
+private fun ProfileDetails(focusState: MutableState<Boolean>) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -223,24 +247,27 @@ private fun ProfileDetails() {
         Text(text = stringResource(R.string.profile_name), style = profileNameTextStyle, color = black, maxLines = 1)
         VerticalSpacer(height = R.dimen.profile_details_top_padding)
         Text(text = stringResource(R.string.profile_details), style = profileDetailsTextStyle, color = gray, maxLines = 1)
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .padding(
-                    horizontal = R.dimen.profile_button_horizontal_padding,
-                    vertical = R.dimen.profile_button_vertical_padding
+        TvLeanBackButton(shouldFocus = focusState.value) { isFocused ->
+            focusState.value = isFocused
+
+            Box(
+                modifier = Modifier
+                    .padding(
+                        horizontal = R.dimen.profile_button_horizontal_padding,
+                        vertical = R.dimen.profile_button_vertical_padding
+                    )
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.profile_card_corner_radius)))
+                    .background(if (isFocused) yellow else lightGray)
+            ) {
+                Text(
+                    text = stringResource(R.string.profile_button),
+                    modifier = Modifier.align(Alignment.Center),
+                    style = profileButtonTextStyle,
+                    color = black,
+                    maxLines = 1
                 )
-                .fillMaxSize(),
-            colors = ButtonDefaults.textButtonColors(
-                backgroundColor = lightGray,
-                contentColor = black,
-                disabledContentColor = white
-            ),
-            shape = RoundedCornerShape(dimensionResource(id = R.dimen.profile_card_corner_radius)),
-            elevation = null,
-            contentPadding = PaddingValues()
-        ) {
-            Text(text = stringResource(R.string.profile_button),style = profileButtonTextStyle, color = black, maxLines = 1)
+            }
         }
     }
 }

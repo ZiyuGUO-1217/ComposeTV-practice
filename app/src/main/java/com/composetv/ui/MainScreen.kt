@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.composetv.ui.burgers.BurgersScreen
-import com.composetv.ui.menu.MenuBar
+import com.composetv.ui.menu.SideBar
 import com.composetv.ui.theme.white
 import com.composetv.ui.weight.TopBar
 
@@ -20,7 +20,7 @@ fun MainScreen() {
             .fillMaxSize()
             .background(white)
     ) {
-        MenuBar()
+        SideBar()
         Box(modifier = Modifier.fillMaxSize()) {
             TopBar()
             BurgersScreen()

@@ -1,7 +1,7 @@
 package com.composetv.ui.menu
 
 data class MenuUiState(
-    val selectedItem: Int = 0
+    val selectedItem: Int = 1
 )
 
 sealed interface MenuUiAction {
@@ -10,4 +10,6 @@ sealed interface MenuUiAction {
     object KeySelected: MenuUiAction
 }
 
-sealed interface MenuUiEvent
+sealed interface MenuUiEvent {
+    object FocusBelowItem: MenuUiEvent
+}

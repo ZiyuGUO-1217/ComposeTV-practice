@@ -60,6 +60,9 @@ dependencies {
     kapt 'com.google.dagger:hilt-compiler:2.41'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
 
+    // collectAsStateWithLifecycle
+//    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha03'
+
 //    implementation "androidx.navigation:navigation-compose:${Versions.navigation}"
 //    implementation "androidx.paging:paging-compose:${Versions.pagingCompose}"
 //    implementation "com.google.accompanist:accompanist-insets:${Versions.accompanist}"
